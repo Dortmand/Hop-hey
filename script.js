@@ -10,7 +10,7 @@ document.getElementById("product-form").addEventListener("submit", function (e) 
         return;
     }
 
-    // Розрахувати дату закінчення терміну зберігання на основі поточної дати + кількість днів
+    // Розрахунок дати закінчення терміну зберігання
     const currentDate = new Date();
     const expirationDate = new Date(currentDate.getTime() + expirationDays * 24 * 60 * 60 * 1000);
 
@@ -22,22 +22,29 @@ document.getElementById("product-form").addEventListener("submit", function (e) 
 
 let products = [];
 
+// Додавання товару з можливістю додавання кількох термінів реалізації
 function addProduct(name, type, expirationDate, expirationDays) {
-    const product = {
-        name,
-        type,
-        expirationDates: [{ expirationDate, expirationDays }],
-        id: Date.now(),
-    };
-    products.push(product);
+    const product = products.find(p => p.name === name);
+
+    if (product) {
+        product.expirationDates.push({ expirationDate, expirationDays });
+    } else {
+        products.push({
+            name,
+            type,
+            expirationDates: [{ expirationDate, expirationDays }],
+            id: Date.now(),
+        });
+    }
     renderProducts();
 }
 
+// Рендер списку товарів
 function renderProducts() {
     const productList = document.getElementById("product-list");
     productList.innerHTML = "";
 
-    // Сортування за типом (опт, штучний, інший)
+    // Сортування за типом товару
     products.sort((a, b) => a.type.localeCompare(b.type));
 
     products.forEach((product) => {
@@ -62,6 +69,7 @@ function renderProducts() {
     });
 }
 
+// Видалення товару
 function deleteProduct(id) {
     products = products.filter((product) => product.id !== id);
     renderProducts();
@@ -69,15 +77,18 @@ function deleteProduct(id) {
     checkExpiringSoon();
 }
 
+// Очищення форми
 function clearForm() {
     document.getElementById("product-form").reset();
 }
 
+// Оновлення кількості товарів без термінів
 function updateEmptyFields() {
     const emptyFields = products.filter((product) => !product.expirationDates.length);
     document.getElementById("total-empty-fields").textContent = emptyFields.length;
 }
 
+// Перевірка, чи скоро закінчиться термін реалізації
 function checkExpiringSoon() {
     const currentDate = new Date().toISOString().split('T')[0];
     products.forEach((product) => {
@@ -92,9 +103,21 @@ function checkExpiringSoon() {
     });
 }
 
-// Функція для додавання товарів за фото (потрібно реалізувати)
+// Додавання товару через фото
+function handlePhotoUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const photoData = e.target.result;
+            addProductByPhoto(photoData);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Додавання товару через фото (заготовка)
 function addProductByPhoto(photoData) {
-    // Припускаємо, що photoData містить назву товару та період реалізації
     const productName = extractProductNameFromPhoto(photoData);
     const expirationDays = extractExpirationDaysFromPhoto(photoData);
 
@@ -106,14 +129,12 @@ function addProductByPhoto(photoData) {
     }
 }
 
-// Заготовка для вилучення назви товару з фото
+// Витягування назви товару з фото (заготовка)
 function extractProductNameFromPhoto(photoData) {
-    // Логіка для вилучення назви товару з фото
-    return "Приклад Товару";
+    return "Приклад Товару"; // Повертає назву товару після розпізнавання
 }
 
-// Заготовка для вилучення днів реалізації з фото
+// Витягування терміну реалізації з фото (заготовка)
 function extractExpirationDaysFromPhoto(photoData) {
-    // Логіка для вилучення днів реалізації з фото
-    return 7;
-}
+    return 7; // Повертає кількість днів реалізації після розпізнавання
+                                        }
