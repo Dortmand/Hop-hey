@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управління Товарами</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Підключення CSS файлу -->
 </head>
 <body>
     <div id="product-container">
         <h1>Управління Товарами</h1>
+        
+        <!-- Форма для додавання товарів -->
         <form id="product-form">
-            <input type="text" id="productName" placeholder="Назва товару">
-            <select id="productType">
+            <input type="text" id="productName" placeholder="Назва товару" required>
+            <select id="productType" required>
                 <option value="bulk">Оптовий</option>
                 <option value="individual">Штучний</option>
                 <option value="weighted">Ваговий</option>
             </select>
-            <input type="number" id="expirationDays" placeholder="Кількість днів реалізації">
+            <input type="number" id="expirationDays" placeholder="Кількість днів реалізації" required min="1">
             <button type="submit">Додати товар</button>
         </form>
+        
+        <!-- Завантаження фото для товару -->
+        <input type="file" id="uploadPhoto" accept="image/*" onchange="handlePhotoUpload(event)">
+        
+        <!-- Список товарів -->
         <ul id="product-list"></ul>
+        
         <p>Всього товарів без терміну: <span id="total-empty-fields">0</span></p>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- Підключення JS файлу -->
 </body>
 </html>
