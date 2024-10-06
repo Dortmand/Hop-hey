@@ -1,45 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Хоп Хей - Сроки годності товарів</title>
+    <title>Управління Товарами</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Магазин Хоп Хей - Сроки годності товарів</h1>
+    <div id="product-container">
+        <h1>Управління Товарами</h1>
         <form id="product-form">
-            <div class="form-group">
-                <label for="productName">Назва товару:</label>
-                <input type="text" id="productName" placeholder="Введіть назву товару" required>
-            </div>
-            <div class="form-group">
-                <label for="productType">Клас товару:</label>
-                <select id="productType">
-                    <option value="Штучний товар">Штучний товар</option>
-                    <option value="Весовий товар">Весовий товар</option>
-                    <option value="Бутилочний товар">Бутилочний товар</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="expirationType">Тип строку:</label>
-                <select id="expirationType">
-                    <option value="Кінцевий">Кінцевий строк</option>
-                    <option value="Початковий">Початковий строк</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="expirationDate">Дата:</label>
-                <input type="date" id="expirationDate" required>
-            </div>
+            <input type="text" id="productName" placeholder="Назва товару">
+            <select id="productType">
+                <option value="bulk">Оптовий</option>
+                <option value="individual">Штучний</option>
+                <option value="weighted">Ваговий</option>
+            </select>
+            <input type="number" id="expirationDays" placeholder="Кількість днів реалізації">
             <button type="submit">Додати товар</button>
         </form>
-        <h2>Товари:</h2>
         <ul id="product-list"></ul>
-        <p id="total-empty-fields"></p>
-        <p id="expiring-soon"></p>
+        <p>Всього товарів без терміну: <span id="total-empty-fields">0</span></p>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
