@@ -3,15 +3,18 @@ document.getElementById("product-form").addEventListener("submit", function (e) 
 
     const productName = document.getElementById("productName").value;
     const productType = document.getElementById("productType").value;
-    const expirationType = document.getElementById("expirationType").value;
-    const expirationDate = document.getElementById("expirationDate").value;
+    const expirationDays = document.getElementById("expirationDays").value;
 
-    if (!productName || !expirationDate) {
+    if (!productName || !expirationDays) {
         alert("Будь ласка, заповніть всі поля!");
         return;
     }
 
-    addProduct(productName, productType, expirationType, expirationDate);
+    // Розрахувати дату закінчення терміну зберігання на основі поточної дати + кількість днів
+    const currentDate = new Date();
+    const expirationDate = new Date(currentDate.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+
+    addProduct(productName, productType, expirationDate.toISOString().split('T')[0], expirationDays);
     clearForm();
     updateEmptyFields();
     checkExpiringSoon();
@@ -19,12 +22,11 @@ document.getElementById("product-form").addEventListener("submit", function (e) 
 
 let products = [];
 
-function addProduct(name, type, expirationType, expirationDate) {
+function addProduct(name, type, expirationDate, expirationDays) {
     const product = {
         name,
         type,
-        expirationType,
-        expirationDate,
+        expirationDates: [{ expirationDate, expirationDays }],
         id: Date.now(),
     };
     products.push(product);
@@ -35,16 +37,24 @@ function renderProducts() {
     const productList = document.getElementById("product-list");
     productList.innerHTML = "";
 
+    // Сортування за типом (опт, штучний, інший)
+    products.sort((a, b) => a.type.localeCompare(b.type));
+
     products.forEach((product) => {
         const li = document.createElement("li");
         li.classList.add("product-item");
 
-        if (isExpiringSoon(product.expirationDate)) {
-            li.classList.add("expiring");
-        }
+        product.expirationDates.forEach((exp) => {
+            if (isExpiringSoon(exp.expirationDate)) {
+                li.classList.add("expiring");
+            }
+        });
 
         li.innerHTML = `
-            <span>${product.name} (${product.type}) - ${product.expirationType}: ${product.expirationDate}</span>
+            <span>${product.name} (${product.type}) - Періоди реалізації:</span>
+            <ul>
+                ${product.expirationDates.map(exp => `<li>${exp.expirationDate} (${exp.expirationDays} днів)</li>`).join('')}
+            </ul>
             <button class="delete-button" onclick="deleteProduct(${product.id})">Видалити</button>
         `;
 
@@ -64,25 +74,46 @@ function clearForm() {
 }
 
 function updateEmptyFields() {
-    const emptyFields = products.filter((product) => !product.expirationDate);
-    document.getElementById("total-empty-fields").textContent =
-        "Незаповнені поля: " + emptyFields.length;
+    const emptyFields = products.filter((product) => !product.expirationDates.length);
+    document.getElementById("total-empty-fields").textContent = emptyFields.length;
 }
 
 function checkExpiringSoon() {
-    const expiringSoonProducts = products.filter((product) =>
-        isExpiringSoon(product.expirationDate)
-    );
-
-    document.getElementById("expiring-soon").textContent =
-        "Товарів, які скоро закінчаться: " + expiringSoonProducts.length;
+    const currentDate = new Date().toISOString().split('T')[0];
+    products.forEach((product) => {
+        product.expirationDates.forEach((exp) => {
+            if (new Date(exp.expirationDate).getTime() - new Date(currentDate).getTime() <= 24 * 60 * 60 * 1000) {
+                const li = document.querySelector(`li.product-item[data-id='${product.id}']`);
+                if (li) {
+                    li.style.backgroundColor = "red";
+                }
+            }
+        });
+    });
 }
 
-function isExpiringSoon(expirationDate) {
-    const today = new Date();
-    const productDate = new Date(expirationDate);
-    const timeDiff = productDate - today;
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+// Функція для додавання товарів за фото (потрібно реалізувати)
+function addProductByPhoto(photoData) {
+    // Припускаємо, що photoData містить назву товару та період реалізації
+    const productName = extractProductNameFromPhoto(photoData);
+    const expirationDays = extractExpirationDaysFromPhoto(photoData);
 
-    return daysDiff <= 1;
+    if (productName && expirationDays) {
+        const currentDate = new Date();
+        const expirationDate = new Date(currentDate.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+        addProduct(productName, "unknown", expirationDate.toISOString().split('T')[0], expirationDays);
+        renderProducts();
+    }
+}
+
+// Заготовка для вилучення назви товару з фото
+function extractProductNameFromPhoto(photoData) {
+    // Логіка для вилучення назви товару з фото
+    return "Приклад Товару";
+}
+
+// Заготовка для вилучення днів реалізації з фото
+function extractExpirationDaysFromPhoto(photoData) {
+    // Логіка для вилучення днів реалізації з фото
+    return 7;
 }
