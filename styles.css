@@ -29,3 +29,12 @@ body {
     padding: 5px;
     cursor: pointer;
 }
+
+.expiring {
+    background-color: red;
+    color: white;
+}
+
+button {
+    margin-left: 10px;
+}
