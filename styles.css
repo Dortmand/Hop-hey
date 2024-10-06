@@ -1,88 +1,31 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    padding: 20px;
 }
 
-.container {
-    max-width: 800px;
-    margin: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+#product-container {
+    width: 400px;
+    margin: 0 auto;
 }
 
-h1, h2 {
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #218838;
+#product-list {
+    list-style-type: none;
+    padding: 0;
 }
 
 .product-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    margin: 5px 0;
 }
 
-.product-item.expiring {
-    background-color: #ffdddd;
+.expiring {
+    background-color: yellow;
 }
 
-.product-item .delete-button {
-    background-color: #dc3545;
+.delete-button {
+    background-color: red;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 5px;
     cursor: pointer;
-}
-
-.product-item .delete-button:hover {
-    background-color: #c82333;
-}
-
-.empty-field {
-    background-color: #fff3cd;
-}
-
-#total-empty-fields {
-    color: #856404;
-}
-
-#expiring-soon {
-    color: #dc3545;
 }
